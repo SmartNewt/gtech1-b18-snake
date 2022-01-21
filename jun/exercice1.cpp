@@ -3,7 +3,7 @@
 using namespace std;
 
 MainSDLWindow::MainSDLWindow(){
-     window =        NULL;
+     window   = NULL;
      renderer = NULL;
      
 }
