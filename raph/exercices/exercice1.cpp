@@ -3,27 +3,44 @@
 #include <iostream>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
+#include <string.h>
+using namespace std;
 
-int main(void) {
-    MainSDLWindow main_window;
-    main_window.Init();
-}
 
 class MainSDLWindow{
+    private:
+    SDL_Window * window;
+    SDL_Renderer * renderer;
 
-private:
-    /* data */
-public:
+    public:
+    int width;
+    int height;
+    string name;
 
+    
     MainSDLWindow(){
-        this -> window = NULL
-        this -> renderer = NULL
-    };
-    ~MainSDLWindow();
+        window = NULL;
+        renderer = NULL;
+    }
+
+    ~MainSDLWindow(){
+        SDL_QUIT;
+    }
+
+    int Init(int width, int height, string name){
+        MainSDLWindow window;
+        MainSDLWindow renderer;
+
+        if(SDL_Init(SDL_INIT_VIDEO) < 0){
+        printf("Erreur d'initialisation de la SDL : %s",SDL_GetError());
+        return EXIT_FAILURE;
+        }
+        return 0;
+    }
 };
-
-MainSDLWindow::MainSDLWindow(/* args */){
-}
-
-MainSDLWindow::~MainSDLWindow(){
-}
+        
+int main(void) {
+    MainSDLWindow main_window;
+    main_window.Init(500, 500, "window");
+    return 0;
+};
