@@ -16,6 +16,17 @@ public:
     SDL_Renderer *GetRenderer(void);
 };
 
+class Snake
+{
+private:
+    /* data */
+public:
+    Snake(/* args */);
+    ~Snake();
+};
+
+
+
 
 
 
