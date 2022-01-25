@@ -3,9 +3,10 @@
 
 int main(void){
     MainSDLWindow main_window;
-    main_window.Init("Snackou", 800, 800);
+    main_window.Init("Snake", 800, 800);
     bool quit = false;
     SDL_Event e ;
+    Uint32 frame_rate = 20;
     while( !quit ){
         //Handle events on queue
         while( SDL_PollEvent( &e ) != 0 ){
