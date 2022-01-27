@@ -10,5 +10,19 @@ public:
 private:
     SDL_Window *     window;
     SDL_Renderer * renderer;
+    
+};
+
+class Rect{
+    int drawRect();
+
+}
+
+
+class Movement{
+public:
+    Movement();
+    void  keyboard();
+private:
 
 };
