@@ -54,11 +54,12 @@ int keyboard(int *px, int *py){
     if (keystates[SDL_SCANCODE_LEFT]){
         *px -= MOVECASE;
     }
+    return 0;
 }
 
 int main(){
     MainSDLWindow win_s;
-    
+    MainSDLWindow mvt  ;
     bool quit = false ;
     SDL_Event e ;
     win_s.Init("title", 800, 800);
@@ -66,12 +67,10 @@ int main(){
     // if (win_s.GetRenderer() = NULL)
     int x, y;
     while( !quit )
-    {   
-        //maTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,200,100);
-        SDL_SetRenderDrawColor(renderer,255,255,255,255);
+    {      
         SDL_Rect rectangle {0,0,20,20};
         //SDL_RenderCopy(renderer, maTexture, &rectangle);
-        SDL_RenderFillRect();
+        SDL_RenderFillRect(renderer, &rectangle);
         int *px, *py;
         px=&x; py=&y;
         mvt.keyboard(px, py);
