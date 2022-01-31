@@ -1,9 +1,12 @@
 #include <iostream>
-#include <SDL2/SDL.h> 
-#include "MainSDLWindow.hpp"
+#include "Game.hpp"
 
-int main(void){
-    MainSDLWindow window;
-    MainSDLWindow renderer;
-    MainSDLWindow main_window;
-    main_window.Init();
+using namespace std;
+
+int main(int argc, char * argv[])
+{
+    Game game = Game();
+    Game().Run();
+    cout << "Game has terminated successfully" << endl;
+    return 0;
+}
