@@ -18,6 +18,7 @@ private:
     SDL_Renderer * renderer;
     int _x;
     int _y;
+    int speed = 10;
 };
 
 #endif

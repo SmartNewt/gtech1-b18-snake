@@ -1,11 +1,11 @@
 #include "window.hpp"
 using namespace std;
-#define MOVECASE 10
 //Initialize variables  constructor//
 MainSDLWindow::MainSDLWindow(){
      window   = NULL;
      renderer = NULL;
-    
+        _x = 0;
+        _y = 0;
 }
 //Destrutor//
 MainSDLWindow::~MainSDLWindow(){
@@ -45,44 +45,38 @@ SDL_Renderer *MainSDLWindow::GetRenderer(void) {
 }
 
 void MainSDLWindow::draw() const{
-    SDL_RenderPresent(renderer);
     SDL_SetRenderDrawColor(renderer, 0, 0, 200, 255);
     SDL_RenderClear(renderer);
+    
 }
 
 int MainSDLWindow::rect(){
-    SDL_Rect rect;
+    SDL_Rect rect{0,0,100,100};
     rect.x=_x;
     rect.y=_y;
-    rect.w=100;
-    rect.h=100;
-
-  
-
+    
     SDL_SetRenderDrawColor(renderer, 200, 0, 200, 255);
     SDL_RenderFillRect(renderer,&rect);
-
+    SDL_RenderPresent(renderer);
     return 0;
 }
-
-
-
 
 int MainSDLWindow::keyboard(){
     
     const Uint8 *keystates = SDL_GetKeyboardState(NULL);
     if (keystates[SDL_SCANCODE_UP]) {
-        _y -= MOVECASE;
+        _y -= speed;
     }
     if (keystates[SDL_SCANCODE_DOWN]) {
-        _y += MOVECASE;       
+        _y += speed;       
     }
     if (keystates[SDL_SCANCODE_RIGHT]){
-        _x += MOVECASE;
+        _x += speed;
     }
     if (keystates[SDL_SCANCODE_LEFT]){
-        _x -= MOVECASE;
+        _x -= speed;
     }
+    
     return 0;
 }
 
@@ -98,8 +92,8 @@ int main(){
     while( !quit )
     {   
         win_s.draw();
-        win_s.keyboard();
         win_s.rect();   
+        win_s.keyboard();
         //Handle events on queue
         while( SDL_PollEvent( &e ) != 0 )
         {
@@ -111,6 +105,7 @@ int main(){
         
         }
         // delay ici
+        SDL_Delay(10);
     }
  return EXIT_SUCCESS;
 }
