@@ -61,20 +61,69 @@ int MainSDLWindow::rect(){
     return 0;
 }
 
+void MainSDLWindow::getDir(){
+    SDL_Event event;
+    bool running = false;
+    while (SDL_PollEvent(&e))
+    {
+        if (event.type == SDL_QUIT)
+        {
+            running = false;
+        }
+        else if (event.type == SDL_KEYDOWN) //if key pressed
+        {   //get the pressed key
+            switch (e.key.keysym.sym)
+            {
+                case SDLK_UP:
+                    if (last_dir != direction::down)
+                        dir = direction::up;
+                    break;
+
+                case SDLK_DOWN:
+                    if (last_dir != direction::up)
+                        dir = direction::down;
+                    break;
+
+                case SDLK_LEFT:
+                    if (last_dir != direction::right)
+                        dir = direction::left;
+                    break;
+
+                case SDLK_RIGHT:
+                    if (last_dir != direction::left)
+                        dir = direction::right;
+                    break;
+            }
+        }
+    }
+}
+
 int MainSDLWindow::keyboard(){
-    
-    const Uint8 *keystates = SDL_GetKeyboardState(NULL);
-    if (keystates[SDL_SCANCODE_UP]) {
-        _y -= speed;
-    }
-    if (keystates[SDL_SCANCODE_DOWN]) {
-        _y += speed;       
-    }
-    if (keystates[SDL_SCANCODE_RIGHT]){
-        _x += speed;
-    }
-    if (keystates[SDL_SCANCODE_LEFT]){
-        _x -= speed;
+    bool alive = false;
+    if (!alive)
+        return;
+
+    switch (dir)
+    {
+        case direction::up:
+            _y -= speed;
+            
+            break;
+
+        case direction::down:
+            _y += speed;
+            
+            break;
+
+        case direction::left:
+            _x -= speed;
+            
+            break;
+
+        case direction::right:
+            _x += speed;
+            
+            break;
     }
     
     return 0;
@@ -87,7 +136,7 @@ int main(){
     bool quit = false ;
     SDL_Event e ;
     win_s.Init("title", 800, 800);
-    win_s.rect();
+    
     //While application is running  
     while( !quit )
     {   
