@@ -13,8 +13,8 @@ public:
     SDL_Renderer * GetRenderer(void);
 //background renderer//
     void  draw() const;
-//game element//
-    int rect();
+//snake element//
+    int snake();
     int Getdir();
     int move();
     int playground();
@@ -23,13 +23,15 @@ public:
 private:
     SDL_Window *     window;
     SDL_Renderer * renderer;
-//coordonné snake//
-    float _x = grid_width/2  ;
-    float _y = grid_height/2 ;
-//playground size//
-    static const   int grid_width = 32;
+    int fps;
+    static const int FRAME_RATE     = 1000 / 60;
     static const   int grid_height= 32;
-protected:
+    static const   int grid_width = 32;
+//coordonné snake//
+    float _x = (grid_width/2)   ;
+    float _y = (grid_height/2)  ;
+//playground size//
+
     enum class direction{down,up,right,left};
                direction dir;
                direction last_dir;

@@ -5,8 +5,7 @@ MainSDLWindow::MainSDLWindow(){
      window   = NULL;
      renderer = NULL;
      
-        _x = 0;
-        _y = 0;
+  
 }
 //Destrutor//
 MainSDLWindow::~MainSDLWindow(){
@@ -68,7 +67,7 @@ int MainSDLWindow::playground(){
 
 
 
-int MainSDLWindow::rect(){
+int MainSDLWindow::snake(){
     SDL_Rect rect{0,0,20,20};
     rect.x=_x;
     rect.y=_y;
@@ -144,13 +143,13 @@ int main(){
 
     SDL_Event e ;
     win_s.Init("Snake", 640, 640);
-    win_s.rect();
+    win_s.snake(); 
 
     //While application is running  
     while( !quit )
     {   
         win_s.draw();
-        win_s.rect();   
+        win_s.snake();   
         win_s.move();
         //Handle events on queue
         while( SDL_PollEvent( &e ) != 0 )
