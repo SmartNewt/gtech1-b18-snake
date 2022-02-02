@@ -5,7 +5,7 @@
 #include "Game.hpp"
 
 using namespace std;
-
+//Initialize playground size
 Game::Game()
 {   //init grid
     for (int i = 0; i < GRID_WIDTH; ++i)
@@ -16,7 +16,7 @@ Game::Game()
 
     srand(static_cast<unsigned int>(time(0)));
 }
-
+//Initialize window/renderer
 void Game::Run()
 {
     // Initialize SDL
@@ -48,7 +48,7 @@ void Game::Run()
     running = true;
     GameLoop();
 }
-
+//Main Game loop
 void Game::GameLoop()
 {   
     Uint32 before, second = SDL_GetTicks(), after;
@@ -82,7 +82,7 @@ void Game::GameLoop()
     }
 
 }
-
+//Get snake's direction
 void Game::PollEvents()
 {
     SDL_Event e;
@@ -119,7 +119,7 @@ void Game::PollEvents()
         }
     }
 }
-    
+//Update snake's direction  
 void Game::Update()
 {
     if (!alive)
@@ -162,6 +162,12 @@ void Game::Update()
     if (new_x != head.x || new_y != head.y)
     {
         last_dir = dir;
+        if (/* condition */)
+        {
+            /* code */
+        }
+        
+    
     }
     if (new_x == food.x && new_y == food.y)
     {
@@ -190,7 +196,8 @@ void Game::Render()
     if (alive) SDL_SetRenderDrawColor(renderer, 230, 165, 15, 255);
     else       SDL_SetRenderDrawColor(renderer, 230, 200, 140, 125);
     SDL_RenderFillRect(renderer, &block);
-
+    //Render snake's body 
+    
     // Render food
     block.x = food.x * block.w;
     block.y = food.y * block.h;
@@ -205,20 +212,26 @@ void Game::Food()
 {
      
     srand(time(NULL));
-    
+    int x, y ;
     if (food_ate)
     {
-    food.x = rand() % 32 + 1;
-    food.y = rand() % 32 + 1;   
-    Grow();
-    }
+        x = rand() % 32 + 1;
+        y = rand() % 32 + 1;   
+        Grow();
     
+        if (grid[food.x][food.y]==Block::empty)
+        {
+        food.x = x;
+        food.y = y;   
+        }
+    }
     
 
 }
 
 void Game::Grow()
 {
+    growing = true;
     food_ate = false;
     size = size++;
 }
@@ -228,3 +241,7 @@ void Game::Close()
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
+
+
+
+

@@ -17,6 +17,7 @@ private:
     bool running = false;
     bool food_ate = false;
     bool alive = false;
+    bool growing = false;
     int fps = 0;
     int size = 0;
 
