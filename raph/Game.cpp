@@ -53,11 +53,12 @@ void Game::GameLoop()
 {   
     Uint32 before, second = SDL_GetTicks(), after;
     int frame_time, frames = 0;
-
+    food.x = 8;
+    food.y = 8; 
     while (running)
     {   //get time since SDL2 start
         before = SDL_GetTicks();
-
+        Food();
         PollEvents();
         Update();
         Render();
@@ -162,6 +163,10 @@ void Game::Update()
     {
         last_dir = dir;
     }
+    if (new_x == food.x && new_y == food.y)
+    {
+        food_ate = true;
+    }
 
     head.x = new_x;
     head.y = new_y;
@@ -186,8 +191,36 @@ void Game::Render()
     else       SDL_SetRenderDrawColor(renderer, 230, 200, 140, 125);
     SDL_RenderFillRect(renderer, &block);
 
+    // Render food
+    block.x = food.x * block.w;
+    block.y = food.y * block.h;
+    SDL_SetRenderDrawColor(renderer, 255, 55, 0, 255);    
+    SDL_RenderFillRect(renderer, &block);
+
     // Update Screen
     SDL_RenderPresent(renderer);
+}
+
+void Game::Food()
+{
+     
+    srand(time(NULL));
+    
+    if (food_ate)
+    {
+    food.x = rand() % 32 + 1;
+    food.y = rand() % 32 + 1;   
+    Grow();
+    }
+    
+    
+
+}
+
+void Game::Grow()
+{
+    food_ate = false;
+    size = size++;
 }
 
 void Game::Close()

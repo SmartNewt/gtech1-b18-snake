@@ -4,7 +4,6 @@ using namespace std;
 MainSDLWindow::MainSDLWindow(){
      window   = NULL;
      renderer = NULL;
-     
         _x = 0;
         _y = 0;
 }
@@ -44,32 +43,15 @@ int MainSDLWindow::Init(const char* title, int Window_height, int Window_width){
 SDL_Renderer *MainSDLWindow::GetRenderer(void) {
     return this->renderer;
 }
-//background renderer//
+
 void MainSDLWindow::draw() const{
     SDL_SetRenderDrawColor(renderer, 0, 0, 200, 255);
     SDL_RenderClear(renderer);
     
 }
 
-int MainSDLWindow::playground(){
-    
-    for (int i = 0; i < grid_width; i++)
-    {
-        for (int j = 0; j < grid_height ; j++)
-        {
-            playGround[i][j] = Block::empty;
-        }
-        
-    }
-    return 0;
-}
-
-
-
-
-
 int MainSDLWindow::rect(){
-    SDL_Rect rect{0,0,20,20};
+    SDL_Rect rect{0,0,100,100};
     rect.x=_x;
     rect.y=_y;
     
@@ -79,79 +61,88 @@ int MainSDLWindow::rect(){
     return 0;
 }
 
-int MainSDLWindow::Getdir(){
+void MainSDLWindow::getDir(){
     SDL_Event event;
-
-    while (SDL_PollEvent(&event))
+    bool running = false;
+    while (SDL_PollEvent(&e))
     {
-        if (event.type == SDL_QUIT) running = false;
-        if (event.type == SDL_KEYDOWN)
+        if (event.type == SDL_QUIT)
         {
-            switch (event.key.keysym.sym)
+            running = false;
+        }
+        else if (event.type == SDL_KEYDOWN) //if key pressed
+        {   //get the pressed key
+            switch (e.key.keysym.sym)
             {
-            case SDLK_DOWN:
-            if (last_dir != direction::up)
-            {
-                dir = direction::down;                
-            }
-                break;
-            case SDLK_UP:
-            if (last_dir != direction::down)
-            {
-                dir = direction::up;                
-            }
-                break;
-            case SDLK_RIGHT:
-            if (last_dir != direction::left)
-            {
-                dir = direction::right;                
-            }
-                break;
-            case SDLK_LEFT:
-            if (last_dir != direction::right)
-            {
-                dir = direction::left;                
-            }
-                break;
+                case SDLK_UP:
+                    if (last_dir != direction::down)
+                        dir = direction::up;
+                    break;
+
+                case SDLK_DOWN:
+                    if (last_dir != direction::up)
+                        dir = direction::down;
+                    break;
+
+                case SDLK_LEFT:
+                    if (last_dir != direction::right)
+                        dir = direction::left;
+                    break;
+
+                case SDLK_RIGHT:
+                    if (last_dir != direction::left)
+                        dir = direction::right;
+                    break;
             }
         }
-    }  
+    }
+}
+
+int MainSDLWindow::keyboard(){
+    bool alive = false;
+    if (!alive)
+        return;
+
+    switch (dir)
+    {
+        case direction::up:
+            _y -= speed;
+            
+            break;
+
+        case direction::down:
+            _y += speed;
+            
+            break;
+
+        case direction::left:
+            _x -= speed;
+            
+            break;
+
+        case direction::right:
+            _x += speed;
+            
+            break;
+    }
+    
     return 0;
 }
 
-int MainSDLWindow::move(){
-    switch (dir)
-    {
-    case direction::down:
-        _y += speed;
-        break;
-    case direction::up:
-        _y -= speed;
-        break;
-    case direction::right:
-        _x += speed;
-        break;
-    case direction::left:
-        _x -= speed;
-        break;
-    }
-    return 0;
-}
+
 
 int main(){
     MainSDLWindow win_s;
     bool quit = false ;
-
     SDL_Event e ;
-    win_s.Init("Snake", 640, 640);
-    win_s.rect();
-
+    win_s.Init("title", 800, 800);
+    
     //While application is running  
     while( !quit )
     {   
         win_s.draw();
         win_s.rect();   
-        win_s.move();
+        win_s.keyboard();
         //Handle events on queue
         while( SDL_PollEvent( &e ) != 0 )
         {
@@ -163,7 +154,7 @@ int main(){
         
         }
         // delay ici
-        SDL_Delay(100);
+        SDL_Delay(10);
     }
  return EXIT_SUCCESS;
 }
