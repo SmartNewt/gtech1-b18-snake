@@ -5,7 +5,7 @@
 #include "Game.hpp"
 
 using namespace std;
-
+//Initialize playground size
 Game::Game()
 {   //init grid
     for (int i = 0; i < GRID_WIDTH; ++i)
@@ -14,7 +14,7 @@ Game::Game()
             grid[i][j] = Block::empty;
         }
 }
-
+//Initialize window/renderer
 void Game::Run()
 {
     // Initialize SDL
@@ -46,20 +46,24 @@ void Game::Run()
     running = true;
     GameLoop();
 }
-
+//Main Game loop
 void Game::GameLoop()
 {   
     Uint32 before, second = SDL_GetTicks(), after;
     int frame_time, frames = 0;
-
+    Food();
     while (running)
+    
     {   //get time since SDL2 start
         before = SDL_GetTicks();
 
         PollEvents();
-        Update();
-        Render();
-
+        if (paused == false)
+        {
+            Update();
+            Render();
+        }
+        else Render();
         frames++;
         after = SDL_GetTicks();
         frame_time = after - before;
@@ -79,7 +83,7 @@ void Game::GameLoop()
     }
 
 }
-
+//Get snake's direction
 void Game::PollEvents()
 {
     SDL_Event e;
@@ -112,11 +116,22 @@ void Game::PollEvents()
                     if (last_dir != Move::left)
                         dir = Move::right;
                     break;
+                
+                case SDLK_p:
+                    if (!paused)
+                    {
+                        paused = true;
+                    }
+                    else if (paused)
+                    {
+                        paused = false;
+                    }
+                    break;
             }
         }
     }
 }
-
+//Update snake's direction  
 void Game::Update()
 {
     if (!alive)
@@ -159,12 +174,47 @@ void Game::Update()
     if (new_x != head.x || new_y != head.y)
     {
         last_dir = dir;
-    }
+        // If we are growing, just make a new segment
+        if (growing == true)
+        {
+            size++;
+            body.push_back(head);
+            growing = false;
+            grid[head.x][head.y] = Block::body;
+        }
+        else
+        {
+            // We need to shift the body
+            SDL_Point free = head;
+            vector<SDL_Point>::reverse_iterator rit = body.rbegin();
+            for ( ; rit != body.rend(); ++rit)
+            {
+                grid[free.x][free.y] = Block::body;
+                swap(*rit, free);
+            }
 
+            grid[free.x][free.y] = Block::empty;
+        }
+
+    
+    }
+    
     head.x = new_x;
     head.y = new_y;
 
-    Block & next = grid[head.x][head.y];
+    // Check if there's food over here
+    if (grid[head.x][head.y] == Block::food)
+    {
+        Food();
+        Grow();
+    }
+    // Check if we're dead
+    else if (grid[head.x][head.y] == Block::body)
+    {
+        alive = false;
+    }
+
+    grid[head.x][head.y] = Block::head;
 }
 
 void Game::Render()
@@ -174,18 +224,65 @@ void Game::Render()
     block.h = SCREEN_WIDTH / GRID_HEIGHT;
 
     // Clear screen
-    SDL_SetRenderDrawColor(renderer, 85, 160, 50, 255);
+    if (paused) SDL_SetRenderDrawColor(renderer, 85, 160, 80, 255);
+    else        SDL_SetRenderDrawColor(renderer, 85, 160, 50, 255);
     SDL_RenderClear(renderer);
 
     // Render snake's head
     block.x = head.x * block.w;
     block.y = head.y * block.h;
-    if (alive) SDL_SetRenderDrawColor(renderer, 230, 165, 15, 255);
+    if (paused) SDL_SetRenderDrawColor(renderer, 230, 165, 45, 255);
+    else if (alive) SDL_SetRenderDrawColor(renderer, 230, 165, 15, 255);
     else       SDL_SetRenderDrawColor(renderer, 230, 200, 140, 125);
+    SDL_RenderFillRect(renderer, &block);
+
+    //Render snake's body 
+    if (paused) SDL_SetRenderDrawColor(renderer, 195, 185, 50, 255);
+    else if(alive) SDL_SetRenderDrawColor(renderer, 195, 185, 20, 255);
+    else      SDL_SetRenderDrawColor(renderer, 195, 200, 145, 125);
+    for (SDL_Point & point : body)
+    {
+        block.x = point.x * block.w;
+        block.y = point.y * block.h;
+        SDL_RenderFillRect(renderer, &block);
+    }
+
+    // Render food
+    block.x = food.x * block.w;
+    block.y = food.y * block.h;
+    if (paused) SDL_SetRenderDrawColor(renderer, 230, 55, 30, 255);
+    else SDL_SetRenderDrawColor(renderer, 255, 55, 0, 255);    
     SDL_RenderFillRect(renderer, &block);
 
     // Update Screen
     SDL_RenderPresent(renderer);
+}
+
+void Game::Food()
+{
+    int x, y;
+    while (true)
+    {   //get a random position for the food
+        x = rand() % GRID_WIDTH;
+        y = rand() % GRID_HEIGHT;
+
+        //if the position is free : set the food here
+        if (grid[x][y] == Block::empty)
+        {
+            grid[x][y] = Block::food;
+            food.x = x;
+            food.y = y;
+            Grow();
+            break;
+        }
+    }
+}
+
+void Game::Grow()
+{
+    growing = true;
+    food_ate = false;
+    size = size++;
 }
 
 void Game::Close()
