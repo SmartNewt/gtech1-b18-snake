@@ -9,8 +9,6 @@ public:
 
     Game();
     void Run();
-    int GetScore();
-    int GetSize();
 
 private:
 
@@ -36,7 +34,6 @@ private:
     struct { float x = GRID_WIDTH / 2, y = GRID_HEIGHT / 2; } pos;
 
     SDL_Point head = { static_cast<int>(pos.x), static_cast<int>(pos.y) };
-    SDL_Point food;
     std::vector<SDL_Point> body;
 
     Block grid[GRID_WIDTH][GRID_HEIGHT];

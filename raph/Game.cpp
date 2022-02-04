@@ -13,8 +13,6 @@ Game::Game()
         {
             grid[i][j] = Block::empty;
         }
-
-    srand(static_cast<unsigned int>(time(0)));
 }
 
 void Game::Run()
