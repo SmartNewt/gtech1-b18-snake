@@ -23,7 +23,7 @@ private:
     int y_warp1;
     int x_warp2;
     int y_warp2;
-    int score = 1;
+    int score = 0;
 
     static const int FRAME_RATE     = 1000 /60;
     static const int SCREEN_WIDTH   = 640;

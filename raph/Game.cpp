@@ -43,6 +43,7 @@ void Game::Run()
 
     alive = true;
     running = true;
+    score = 0;
     GameLoop();
 }
 //Main Game loop
@@ -262,7 +263,7 @@ void Game::Render()
     if (paused) SDL_SetRenderDrawColor(renderer, 85, 160, 80, 255);
     else        SDL_SetRenderDrawColor(renderer, 85, 160, 50, 255);
     SDL_RenderClear(renderer);
-    
+
     if (score >= 4)
     {
         // Render warp 1
