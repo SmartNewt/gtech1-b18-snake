@@ -17,8 +17,13 @@ private:
     bool growing = false;
 
     int fps = 0;
-    int x;
-    int y;
+    int x_food;
+    int y_food;
+    int x_warp1;
+    int y_warp1;
+    int x_warp2;
+    int y_warp2;
+    int score = 1;
 
     static const int FRAME_RATE     = 1000 /60;
     static const int SCREEN_WIDTH   = 640;
@@ -29,7 +34,7 @@ private:
     SDL_Window * window = NULL;
     SDL_Renderer * renderer = NULL;
 
-    enum class Block { head, body, food, empty };
+    enum class Block { head, body, food, warp, empty };
     enum class Move { up, down, left, right };
     
 
@@ -40,6 +45,8 @@ private:
 
     SDL_Point head = { (int)(pos.x), (int)(pos.y) };
     SDL_Point food = { (int)(pos.x), (int)(pos.y) };
+    SDL_Point warp1 = { (int)(pos.x), (int)(pos.y) };
+    SDL_Point warp2 = { (int)(pos.x), (int)(pos.y) };
     std::vector<SDL_Point> body;
 
     Block grid[GRID_WIDTH][GRID_HEIGHT];
@@ -49,6 +56,7 @@ private:
     void GameLoop();
     void Render();
     void Food();
+    void Warp();
     void Update();
     void PollEvents();
     void Close();
