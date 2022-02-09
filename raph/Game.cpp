@@ -57,7 +57,6 @@ void Game::GameLoop()
         before = SDL_GetTicks();
 
         PollEvents();
-        printf("alive=%d\n", alive);
         if (paused == false)
         {
             Update();
@@ -66,13 +65,6 @@ void Game::GameLoop()
         frames++;
         after = SDL_GetTicks();
         frame_time = after - before;
-
-        if (after - second >= 1000)
-        {
-            fps = frames;
-            frames = 0;
-            second = after;
-        }
 
         //if frame lasted less than frame rate, wait until frame rate = frame time
         if (FRAME_RATE > frame_time)
@@ -97,40 +89,28 @@ void Game::PollEvents()
             switch (e.key.keysym.sym)
             {
                 case SDLK_UP:
-                    if (last_dir != Move::down)
-                        dir = Move::up;
+                    if (last_dir != Move::down)    dir = Move::up;
                     break;
 
                 case SDLK_DOWN:
-                    if (last_dir != Move::up)
-                        dir = Move::down;
+                    if (last_dir != Move::up)    dir = Move::down;
                     break;
 
                 case SDLK_LEFT:
-                    if (last_dir != Move::right)
-                        dir = Move::left;
+                    if (last_dir != Move::right)    dir = Move::left;
                     break;
 
                 case SDLK_RIGHT:
-                    if (last_dir != Move::left)
-                        dir = Move::right;
+                    if (last_dir != Move::left) dir = Move::right;
                     break;
                 
                 case SDLK_p:
-                    if (!paused)
-                    {
-                        paused = true;
-                    }
-                    else if (paused)
-                    {
-                        paused = false;
-                    }
+                    if (!paused)    paused = true;
+                    else if (paused)paused = false;
                     break;
-                case SDLK_KP_ENTER:
-                    if(!alive)
-                    {
-                        Reload();
-                    }
+
+                case SDLK_SPACE:
+                    if(!alive)    Reload();
                     break;
             }
         }
@@ -172,7 +152,7 @@ void Game::Update()
     if (pos.y < 0) alive = false;
     else if (pos.y > GRID_HEIGHT - 1) alive = false;
 
-    int new_x = static_cast<int>(pos.x); //TODO!
+    int new_x = static_cast<int>(pos.x);
     int new_y = static_cast<int>(pos.y);
 
     // Check if head position has changed
@@ -182,7 +162,6 @@ void Game::Update()
         // If we are growing, just make a new segment
         if (growing == true)
         {
-            size++;
             body.push_back(head);
             growing = false;
             grid[head.x][head.y] = Block::body;
@@ -211,14 +190,15 @@ void Game::Update()
     if (grid[head.x][head.y] == Block::food)
     {
         Food();
-        Grow();
+        growing = true;
     }
 
     grid[head.x][head.y] = Block::head;
 }
-
+//render the snake, the playground and the fruit
 void Game::Render()
 {
+    //createa rect with a tile size
     SDL_Rect block;
     block.w = SCREEN_WIDTH / GRID_WIDTH;
     block.h = SCREEN_WIDTH / GRID_HEIGHT;
@@ -257,10 +237,9 @@ void Game::Render()
     // Update Screen
     SDL_RenderPresent(renderer);
 }
-
+//spawn the food 
 void Game::Food()
 {
-    int x, y;
     while (true)
     {   //get a random position for the food
         srand(time(NULL));
@@ -273,30 +252,21 @@ void Game::Food()
             grid[x][y] = Block::food;
             food.x = x;
             food.y = y;
-            Grow();
             break;
         }
     }
 }
-
-void Game::Grow()
-{
-    growing = true;
-    food_ate = false;
-    size = size++;
-}
-
+//Close the sdl window
 void Game::Close()
 {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
 }
-
+//method for replay after death
 void Game::Reload()
 {
     alive = true;
-    size = 0;
     for (int i = 0; i < GRID_WIDTH; ++i)
     {
         for (int j = 0; j < GRID_HEIGHT; ++j)
